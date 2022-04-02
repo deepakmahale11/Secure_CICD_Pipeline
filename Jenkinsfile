@@ -66,8 +66,7 @@ pipeline {
                 sh 'docker rm login || true'
                 sh 'docker stop pgadmin_conatiner && docker rm pgadmin_container || true'
                 sh 'docker run --name postgres_container -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="1234" --network mynet --ip 172.18.0.3 -d postgres:11.6'
-                sh 'docker run --name pgadmin_container --network mynet --ip 172.18.0.4 -p 5050:80 -e "PGADMIN_DEFAULT_EMAIL=root@gmail.com" -e "PGADMIN_DEFAULT_PASSWORD=1234" -d dpage/pgad
-min4'
+                sh 'docker run --name pgadmin_container --network mynet --ip 172.18.0.4 -p 5050:80 -e "PGADMIN_DEFAULT_EMAIL=root@gmail.com" -e "PGADMIN_DEFAULT_PASSWORD=1234" -d dpage/pgadmin4'
                 sh 'docker build -t prod_tomcat .'
                 sh 'docker run --name login --network mynet -p 80:8080 -d prod_tomcat'
             }
