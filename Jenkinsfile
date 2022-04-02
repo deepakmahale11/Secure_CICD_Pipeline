@@ -4,8 +4,9 @@ pipeline {
     stages {
         stage('Networking Configuration') {
             steps {
-                sh 'docker network rm prod_project || true'
-                sh 'docker container rm $(docker container ls -aq) || true' 
+                sh 'docker network rm mynet || true'
+                sh 'docker container rm $(docker container ls -aq) || true'
+                sh 'docker network create --subnet=172.18.0.0/16 mynet'
             }
         }
         stage('Install Dependencies') {
