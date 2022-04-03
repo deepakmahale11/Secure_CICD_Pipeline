@@ -4,9 +4,7 @@ pipeline {
     stages {
         stage('Networking Configuration') {
             steps {
-                sh 'docker network rm mynet || true'
-                sh 'docker container rm $(docker container ls -aq) || true'
-                sh 'docker network create --subnet=172.18.0.0/16 mynet'
+                sh 'docker network ls'
             }
         }
         stage('Install Dependencies') {
@@ -57,24 +55,25 @@ pipeline {
             steps {
                 sh 'mvn clean'
                 sh 'mvn compile'
-                sh 'mvn install package'
+                sh 'mvn install'
+                sh 'mvn package'
             }
         }
         stage('Initializing Docker') {
             steps {
-                sh 'docker stop postgres_container && docker rm postgres_container || true'
+                sh 'docker stop pgadmin_container || true'
+                sh 'docker stop postgres_container || true'
                 sh 'docker stop login || true'
-                sh 'docker rm login || true'
-                sh 'docker stop pgadmin_conatiner && docker rm pgadmin_container || true'
-                sh 'docker run --name postgres_container -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="1234" --network mynet --ip 172.18.0.3 -d postgres:11.6'
-                sh 'docker run --name pgadmin_container --network mynet --ip 172.18.0.4 -p 5050:80 -e "PGADMIN_DEFAULT_EMAIL=root@gmail.com" -e "PGADMIN_DEFAULT_PASSWORD=1234" -d dpage/pgadmin4'
-                sh 'docker build -t prod_tomcat .'
-                sh 'docker run --name login --network mynet --ip 172.18.0.5 -p 80:8080 -d prod_tomcat'
+                sh 'docker stop sonar || true'
+                sh 'docker start pgadmin_container || true'
+                sh 'docker start postgres_container || true'
+                sh 'docker start login || true'
+                sh 'docker start sonar || true'
             }
         }
         stage('SonarQube Analysis') {
             steps {
-                sh 'mvn sonar:sonar -Dsonar.projectKey=cdac -Dsonar.host.url=http://192.168.10.137:4444 -Dsonar.login=dcce02acbf9019cdc6d338f50287f8178016fd6d || true'
+                sh 'mvn sonar:sonar -Dsonar.projectKey=cdac -Dsonar.host.url=http://cdac.project.com:4444 -Dsonar.login=3bdbed7391e4e49999778e59f146165b7f83ba07  || true'
             }
         }
         stage('SCA') {
@@ -107,8 +106,8 @@ pipeline {
             steps {
                 sh 'docker rm dast_baseline || true'
                 sh 'docker rm dast_full || true'
-                sh 'docker run --name dast_full --network mynet -t owasp/zap2docker-stable zap-full-scan.py -t http://mayur.cdac.project.com/LoginWebApp/ || true'
-                sh 'docker run --name dast_baseline --network mynet -t owasp/zap2docker-stable zap-baseline.py -t http://mayur.cdac.project.com/LoginWebApp/ --autooff || true'
+                sh 'docker run --name dast_full --network project_project -t owasp/zap2docker-stable zap-full-scan.py -t http://mayur.cdac.project.com/LoginWebApp/ || true'
+                sh 'docker run --name dast_baseline --network project_project -t owasp/zap2docker-stable zap-baseline.py -t http://mayur.cdac.project.com/LoginWebApp/ --autooff || true'
             }
         }
     }
