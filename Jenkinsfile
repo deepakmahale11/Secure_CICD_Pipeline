@@ -64,12 +64,9 @@ pipeline {
                 sh 'docker stop pgadmin_container || true'
                 sh 'docker stop postgres_container || true'
                 sh 'docker stop login || true'
-                sh 'docker stop sonar || true'
                 sh 'docker start pgadmin_container || true'
                 sh 'docker start postgres_container || true'
                 sh 'docker start login || true'
-                sh 'docker start sonar || true'
-                sh 'sleep 10s'
             }
         }
         stage('SonarQube Analysis') {
