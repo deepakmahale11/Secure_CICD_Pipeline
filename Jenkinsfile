@@ -69,6 +69,7 @@ pipeline {
                 sh 'docker start postgres_container || true'
                 sh 'docker start login || true'
                 sh 'docker start sonar || true'
+                dh 'sleep 10s'
             }
         }
         stage('SonarQube Analysis') {
