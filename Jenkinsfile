@@ -103,8 +103,13 @@ pipeline {
             steps {
                 sh 'docker rm dast_baseline || true'
                 sh 'docker rm dast_full || true'
-                sh 'docker run --name dast_full --network project_project -t owasp/zap2docker-stable zap-full-scan.py -t http://cdac.project.com/LoginWebApp/ || true'
-                sh 'docker run --name dast_baseline --network project_project -t owasp/zap2docker-stable zap-baseline.py -t http://cdac.project.com/LoginWebApp/ --autooff || true'
+                sh 'docker run -u root --name dast_full -v $(pwd):/zap/wrk/:Z -t owasp/zap2docker-stable zap-full-scan.py -t http://cdac.project.com/LoginWebApp/ -r full_scan.html || true'
+                sh 'docker run -u root --name dast_baseline -v $(pwd):/zap/wrk/:Z -t owasp/zap2docker-stable zap-baseline.py -t http://cdac.project.com/LoginWebApp/ -r baseline_scan.html || true'
+                archiveArtifacts artifacts: 'full_scan.html', onlyIfSuccessful: true
+                archiveArtifacts artifacts: 'baseline_scan.html', onlyIfSuccessful: true
+                emailext attachLog: false, attachmentsPattern: '*scan.html', 
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
+                subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "mayur321886@gmail.com"
             }
         }
     }
