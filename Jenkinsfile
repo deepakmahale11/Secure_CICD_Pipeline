@@ -104,7 +104,7 @@ pipeline {
                 sh 'docker rm dast_baseline || true'
                 sh 'docker rm dast_full || true'
                 sh 'docker run -u root --name dast_full -v $(pwd):/zap/wrk/:Z -t owasp/zap2docker-stable zap-full-scan.py -t http://cdac.project.com/LoginWebApp/ -r full_scan.html || true'
-                sh 'docker run -u root --name dast_baseline -v $(pwd):/zap/wrk/:Z -t owasp/zap2docker-stable zap-baseline.py -t http://cdac.project.com/LoginWebApp/ -r baseline_scan.html || true'
+                sh 'docker run -u root --name dast_baseline -v $(pwd):/zap/wrk/:Z -t owasp/zap2docker-stable zap-baseline.py -t http://cdac.project.com/LoginWebApp/ --autooff -r baseline_scan.html || true'
                 archiveArtifacts artifacts: 'full_scan.html', onlyIfSuccessful: true
                 archiveArtifacts artifacts: 'baseline_scan.html', onlyIfSuccessful: true
                 emailext attachLog: false, attachmentsPattern: '*scan.html', 
