@@ -54,6 +54,11 @@ pipeline {
                 sh 'mvn package'
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                sh 'mvn sonar:sonar -Dsonar.projectKey=group7 -Dsonar.host.url=http://cdac.project.com:4444 -Dsonar.login=1fa472016347b9ec6ac4028f3cbd6f082b4bd735 || true'
+            }
+        }
         stage('Initializing Docker') {
             parallel {
                 stage('Build Docker Images') {
@@ -72,11 +77,6 @@ pipeline {
                         sh 'docker start login'
                     }
                 }
-            }
-        }
-        stage('SonarQube Analysis') {
-            steps {
-                sh 'mvn sonar:sonar -Dsonar.projectKey=group7 -Dsonar.host.url=http://cdac.project.com:4444 -Dsonar.login=1fa472016347b9ec6ac4028f3cbd6f082b4bd735 || true'
             }
         }
         stage('SCA') {
