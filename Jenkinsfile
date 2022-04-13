@@ -59,26 +59,6 @@ pipeline {
                 sh 'mvn sonar:sonar -Dsonar.projectKey=group7 -Dsonar.host.url=http://cdac.project.com:4444 -Dsonar.login=1fa472016347b9ec6ac4028f3cbd6f082b4bd735 || true'
             }
         }
-        stage('Initializing Docker') {
-            parallel {
-                stage('Build Docker Images') {
-                    steps {
-                        sh 'docker build -t mytomcat .'
-                        //sh 'docker-compose up -d'
-                    }
-                }
-                stage('Deploying Containers') {
-                    steps {
-                        sh 'docker stop pgadmin_container'
-                        sh 'docker stop postgres_container'
-                        sh 'docker stop login'
-                        sh 'docker start pgadmin_container'
-                        sh 'docker start postgres_container'
-                        sh 'docker start login'
-                    }
-                }
-            }
-        }
         stage('SCA') {
             parallel {
                 stage('Dependency Check') {
@@ -99,6 +79,26 @@ pipeline {
                         emailext attachLog: true, attachmentsPattern: '*junit.xml', 
                         body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
                         subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "mayur321886@gmail.com"
+                    }
+                }
+            }
+        }
+        stage('Initializing Docker') {
+            parallel {
+                stage('Build Docker Images') {
+                    steps {
+                        sh 'docker build -t mytomcat .'
+                        //sh 'docker-compose up -d'
+                    }
+                }
+                stage('Deploying Containers') {
+                    steps {
+                        sh 'docker stop pgadmin_container'
+                        sh 'docker stop postgres_container'
+                        sh 'docker stop login'
+                        sh 'docker start pgadmin_container'
+                        sh 'docker start postgres_container'
+                        sh 'docker start login'
                     }
                 }
             }
