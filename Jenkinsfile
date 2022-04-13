@@ -76,7 +76,7 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                sh 'mvn sonar:sonar -Dsonar.projectKey=mayur -Dsonar.host.url=http://cdac.project.com:4444 -Dsonar.login=8b23a5d0adfaffdf6030607be0309be62f521981 || true'
+                sh 'mvn sonar:sonar -Dsonar.projectKey=group7 -Dsonar.host.url=http://cdac.project.com:4444 -Dsonar.login=1fa472016347b9ec6ac4028f3cbd6f082b4bd735 || true'
             }
         }
         stage('SCA') {
