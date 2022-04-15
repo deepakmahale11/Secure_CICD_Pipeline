@@ -21,11 +21,13 @@ pipeline {
                 stage('Git Repository Scanner') {
                     steps {
                         sh 'cd $WORKSPACE'
+                        sh 'trufflehog https://github.com/mayur321886/project --entropy 1 > truffelhog_detail.txt'
                         sh 'trufflehog https://github.com/mayur321886/project --json | jq "{branch:.branch, commitHash:.commitHash, path:.path, stringsFound:.stringsFound}" > trufflehog_report.json || true'
                         sh 'cat trufflehog_report.json'
                         sh 'echo "Scanning Repositories.....done"'
                         archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true
-                        emailext attachLog: true, attachmentsPattern: 'trufflehog_report.json', 
+                        archiveArtifacts artifacts: 'trufflehog_detail.txt', onlyIfSuccessful: true
+                        emailext attachLog: true, attachmentsPattern: 'trufflehog_*', 
                         body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-7", 
                         subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "mayur321886@gmail.com"
                     }
