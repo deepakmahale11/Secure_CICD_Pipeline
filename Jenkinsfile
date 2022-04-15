@@ -21,9 +21,8 @@ pipeline {
                 stage('Git Repository Scanner') {
                     steps {
                         sh 'cd $WORKSPACE'
-                        sh 'trufflehog https://github.com/mayur321886/project > truffelhog_detail.txt'
                         sh 'trufflehog https://github.com/mayur321886/project --json | jq "{branch:.branch, commitHash:.commitHash, path:.path, stringsFound:.stringsFound}" > trufflehog_report.json || true'
-                        sh 'cat trufflehog_report.json'
+                        sh 'cat trufflehog_detail.txt'
                         sh 'echo "Scanning Repositories.....done"'
                         archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true
                         archiveArtifacts artifacts: 'trufflehog_detail.txt', onlyIfSuccessful: true
