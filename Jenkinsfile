@@ -12,7 +12,7 @@ pipeline {
                 sh 'cd $WORKSPACE'
                 sh 'rm -rf CDAC-Project'
                 git branch: "master",
-                    url: "https://github.com/mayur321886/project"
+                    url: "https://github.com/RaziAbbas1/Devsecops"
                 sh 'ls'
             }
         }
@@ -21,14 +21,14 @@ pipeline {
                 stage('Git Repository Scanner') {
                     steps {
                         sh 'cd $WORKSPACE'
-                        sh 'trufflehog https://github.com/mayur321886/project --json | jq "{branch:.branch, commitHash:.commitHash, path:.path, stringsFound:.stringsFound}" > trufflehog_report.json || true'
+                        sh 'trufflehog https://github.com/RaziAbbas1/Devsecops --json | jq "{branch:.branch, commitHash:.commitHash, path:.path, stringsFound:.stringsFound}" > trufflehog_report.json || true'
                         sh 'cat trufflehog_detail.txt'
                         sh 'echo "Scanning Repositories.....done"'
                         archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true
                         archiveArtifacts artifacts: 'trufflehog_detail.txt', onlyIfSuccessful: true
                         emailext attachLog: true, attachmentsPattern: 'trufflehog_*', 
-                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-7", 
-                        subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "mayur321886@gmail.com"
+                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-11", 
+                        subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
                     }
                 }
                 stage('Image Security') {
@@ -41,8 +41,8 @@ pipeline {
                         sh 'dockle --input ~/docker_img_backup/sonarqube.tar -f json -o sonarqube_report.json'
                         archiveArtifacts artifacts: '*.json', onlyIfSuccessful: true
                         emailext attachLog: true, attachmentsPattern: '*.json', 
-                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "mayur321886@gmail.com"
+                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-11",
+                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
                     }
                 }
             }
@@ -59,29 +59,29 @@ pipeline {
             parallel {
                 stage('Dependency Check') {
                     steps {
-                        sh 'wget https://github.com/mayur321886/project/blob/master/dc.sh'
+                        sh 'wget https://github.com/RaziAbbas1/Devsecops/blob/master/dc.sh'
                         sh 'chmod +x dc.sh'
                         sh './dc.sh'
                         archiveArtifacts artifacts: 'odc-reports/*.html', onlyIfSuccessful: true
                         archiveArtifacts artifacts: 'odc-reports/*.csv', onlyIfSuccessful: true
                         emailext attachLog: true, attachmentsPattern: '*.html', 
-                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "mayur321886@gmail.com"
+                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-11",
+                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
                     }
                 }
                 stage('Junit Testing') {
                     steps {
                         sh 'echo "Junit Reports are created using archiveArtifacts"'
                         emailext attachLog: true, attachmentsPattern: '*junit.xml', 
-                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "mayur321886@gmail.com"
+                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-11",
+                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
                     }
                 }
             }
         }
         stage('SonarQube Analysis') {
             steps {
-                sh 'mvn sonar:sonar -Dsonar.projectKey=group7 -Dsonar.host.url=http://cdac.project.com:4444 -Dsonar.login=1fa472016347b9ec6ac4028f3cbd6f082b4bd735 || true'
+                sh 'mvn sonar:sonar -Dsonar.projectKey=group11 -Dsonar.host.url=http://cdac.project.com:4444 -Dsonar.login=1fa472016347b9ec6ac4028f3cbd6f082b4bd735 || true'
             }
         }
         stage('Initializing Docker') {
@@ -113,8 +113,8 @@ pipeline {
                 archiveArtifacts artifacts: 'full_scan.html', onlyIfSuccessful: true
                 archiveArtifacts artifacts: 'baseline_scan.html', onlyIfSuccessful: true
                 emailext attachLog: false, attachmentsPattern: '*scan.html', 
-                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "mayur321886@gmail.com"
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-11",
+                subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
             }
         }
     }
