@@ -21,9 +21,14 @@ pipeline {
                 stage('Git Repository Scanner') {
                     steps {
                         sh 'cd $WORKSPACE'
-                        sh 'rm trufflehog || true'
-                        sh 'docker run gesellix/trufflehog --json https://github.com/RaziAbbas1/Devsecops.git > trufflehog'
-                       
+                        sh 'trufflehog https://github.com/RaziAbbas1/Devsecops --json | jq "{branch:.branch, commitHash:.commitHash, path:.path, stringsFound:.stringsFound}" > trufflehog_report.json || true'
+                        sh 'cat trufflehog_detail.txt'
+                        sh 'echo "Scanning Repositories.....done"'
+                        archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true
+                        archiveArtifacts artifacts: 'trufflehog_detail.txt', onlyIfSuccessful: true
+                        emailext attachLog: true, attachmentsPattern: 'trufflehog_*', 
+                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-11", 
+                        subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
                     }
                 }
                 stage('Image Security') {
@@ -113,4 +118,4 @@ pipeline {
             }
         }
     }
-}
+}r
