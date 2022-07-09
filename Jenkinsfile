@@ -22,7 +22,7 @@ pipeline {
                     steps {
                         sh 'cd $WORKSPACE'
                         sh 'trufflehog https://github.com/RaziAbbas1/Devsecops --json | jq "{branch:.branch, commitHash:.commitHash, path:.path, stringsFound:.stringsFound}" > trufflehog_report.json || true'
-                        sh 'cat trufflehog_detail.txt'
+                        sh 'cat trufflehog_report.json'
                         sh 'echo "Scanning Repositories.....done"'
                         archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true
                         archiveArtifacts artifacts: 'trufflehog_detail.txt', onlyIfSuccessful: true
