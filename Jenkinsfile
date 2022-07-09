@@ -16,8 +16,8 @@ pipeline {
                 sh 'ls'
             }
         }
-        stage('Pre-Build Tests') {
-            parallel {
+       // stage('Pre-Build Tests') {
+           // parallel {
                 stage('Git Repository Scanner') {
                     steps {
                         sh 'cd $WORKSPACE'
@@ -25,16 +25,12 @@ pipeline {
                         sh 'cat trufflehog_report.json'
                         sh 'echo "Scanning Repositories.....done"'
                         archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true
-                      //  emailext attachLog: true, attachmentsPattern: 'trufflehog_*', 
-                      //  body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-11", 
-                     //   subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
+                      // emailext attachLog: true, attachmentsPattern: 'trufflehog_*', 
+                      //body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-11", 
+                     //subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
                     }
                 }
-            
-                    
-                
-            
-        
+       
         stage('Build Stage') {
             steps {
                 sh 'mvn clean'
