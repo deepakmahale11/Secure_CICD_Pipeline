@@ -33,7 +33,7 @@ pipeline {
                 stage('Image Security') {
                     steps {
                         sh 'cd $WORKSPACE'
-                        sh 'dockle tomcat' 
+                        sh 'dockle tomcat -f json -o report.json' 
                         //sh 'dockle --input ~/docker_img_backup/pgadmin4.tar -f json -o pgadmin4_report.json'
                         //sh 'dockle --input ~/docker_img_backup/postgres11.tar -f json -o postgres11_report.json'
                         //sh 'dockle --input ~/docker_img_backup/zap2docker-stable.tar -f json -o zap2docker-stable_report.json'
