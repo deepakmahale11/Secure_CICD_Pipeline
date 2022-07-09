@@ -25,8 +25,7 @@ pipeline {
                         sh 'cat trufflehog_report.json'
                         sh 'echo "Scanning Repositories.....done"'
                         archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true
-                        archiveArtifacts artifacts: 'trufflehog_detail.txt', onlyIfSuccessful: true
-                        emailext attachLog: true, attachmentsPattern: 'trufflehog_*', 
+                        emailext attachLog: true, attachmentsPattern: 'trufflehog_report.json',
                         body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-11", 
                         subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
                     }
