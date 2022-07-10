@@ -2,8 +2,7 @@
 pipeline {
    
      agent any
-     tools {
-        maven 'apache-maven-3.8.6'
+    
     }
     stages {
         stage('Networking Configuration') {
