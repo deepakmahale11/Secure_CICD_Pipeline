@@ -59,13 +59,14 @@ pipeline {
                 stage('Build Docker Images') {
                     steps {
                         sh 'docker build -t mytomcat .'
-                        sh 'docker run -p 8000:8000 mytomcat'
-                        sh 'docker-compose up -d'
+                        //sh 'docker run -p 8000:8000 mytomcat'
+                        //sh 'docker-compose up -d'
                     }
                 }
                 stage('Deploying Containers') {
                     steps {
-                        sh 'docker start mytomcat'
+                        sh 'docker run -p 8000:8000 mytomcat'
+                        //sh 'docker start mytomcat'
                         //sh 'docker stop pgadmin_container'
                         //sh 'docker stop postgres_container'
                         //sh 'docker stop login'
