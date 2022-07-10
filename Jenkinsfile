@@ -50,7 +50,7 @@ pipeline {
                 }
             }
         }
-       stage{'Initialize'} {
+       stage('Initialize') {
             steps {
                 sh '''
                        
