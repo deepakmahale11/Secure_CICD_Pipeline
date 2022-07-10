@@ -36,7 +36,7 @@ pipeline {
                         sh 'dockle --input ~/docker_img_backup/mytomcat.tar -f json -o mytomcat_report.json'
                         sh 'dockle --input ~/docker_img_backup/pgadmin4.tar -f json -o pgadmin4_report.json'
                         sh 'dockle --input ~/docker_img_backup/postgres11.tar -f json -o postgres11_report.json'
-                        sh 'dockle --input ~/docker_img_backup/zap2docker-stable.tar -f json -o zap2docker-stable_report.json'
+                        //sh 'dockle --input ~/docker_img_backup/zap2docker-stable.tar -f json -o zap2docker-stable_report.json'
                         sh 'dockle --input ~/docker_img_backup/sonarqube.tar -f json -o sonarqube_report.json'
                         archiveArtifacts artifacts: '*.json', onlyIfSuccessful: true
                         emailext attachLog: true, attachmentsPattern: '*.json', 
