@@ -68,5 +68,4 @@ pipeline {
                 sh 'docker start postgres_container || true'
                 sh 'docker start login || true'
             }
-        }
-        
+        }        
