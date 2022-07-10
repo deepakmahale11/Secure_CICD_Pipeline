@@ -1,6 +1,10 @@
 //pipeline code
 pipeline {
-    agent any
+   
+     agent any
+     tools {
+        maven 'apache-maven-3.8.6'
+    }
     stages {
         stage('Networking Configuration') {
             steps {
@@ -46,6 +50,16 @@ pipeline {
                 }
             }
         }
+        stage {'Initialize'} {
+            steps {
+                sh '''
+                       
+                       echo "PATH = $(PATH)"
+                       echo "M2_HOME = $(M2_HOME)"
+                    '''
+            }
+        }
+        stage 
         stage('Build Stage') {
             steps {
                 sh 'mvn clean'
