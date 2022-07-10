@@ -64,12 +64,13 @@ pipeline {
                 }
                 stage('Deploying Containers') {
                     steps {
-                        sh 'docker stop pgadmin_container'
-                        sh 'docker stop postgres_container'
-                        sh 'docker stop login'
-                        sh 'docker start pgadmin_container'
-                        sh 'docker start postgres_container'
-                        sh 'docker start login'
+                        sh 'docker start mytomcat'
+                        //sh 'docker stop pgadmin_container'
+                        //sh 'docker stop postgres_container'
+                        //sh 'docker stop login'
+                        //sh 'docker start pgadmin_container'
+                        //sh 'docker start postgres_container'
+                        //sh 'docker start login'
                     }
                 }
             }
