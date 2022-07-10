@@ -50,7 +50,7 @@ pipeline {
                 }
             }
         }
-        stage {'Initialize'} {
+       stage{'Initialize'} {
             steps {
                 sh '''
                        
@@ -59,7 +59,7 @@ pipeline {
                     '''
             }
         }
-        stage 
+        
         stage('Build Stage') {
             steps {
                 sh 'mvn clean'
