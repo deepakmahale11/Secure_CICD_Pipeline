@@ -58,14 +58,24 @@ pipeline {
                 sh 'mvn package'
             }
         }
-        stage('Initializing Docker') {
-            steps {
-                sh 'docker stop pgadmin_container'
-                sh 'docker stop postgres_container'
-                sh 'docker stop login'
-                sh 'docker start pgadmin_containeR'
-                sh 'docker start postgres_container'
-                sh 'docker start login'
+        stage('Initializing Docker') {       
+            parallel {
+                stage('Build Docker Images') {
+                    steps {
+                        sh 'docker build -t mytomcat .'
+                        sh 'docker build -t pgadmin_container'
+                    }
+                }
+                stage('Deploying Containers') {
+                    steps {
+                        sh 'docker stop pgadmin_container'
+                        sh 'docker stop postgres_container'
+                        sh 'docker stop login'
+                        sh 'docker start pgadmin_container'
+                        sh 'docker start postgres_container'
+                        sh 'docker start login'
+                  }
+               }     
             }
         }
         stage('SonarQube Analysis') {
