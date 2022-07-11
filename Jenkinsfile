@@ -63,7 +63,7 @@ pipeline {
                 stage('Build Docker Images') {
                     steps {
                         sh 'docker build -t mytomcat .'
-                        sh ''docker-compose up -d'
+                        sh 'docker-compose up -d'
                     }
                 }
                 stage('Deploying Containers') {
