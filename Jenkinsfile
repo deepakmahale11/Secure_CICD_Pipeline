@@ -63,7 +63,7 @@ pipeline {
                 stage('Build Docker Images') {
                     steps {
                         sh 'docker build -t mytomcat .'
-                        sh 'docker build -t pgadmin_container'
+                        sh 'docker build -t pgadmin_container .'
                     }
                 }
                 stage('Deploying Containers') {
