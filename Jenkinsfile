@@ -51,13 +51,13 @@ pipeline {
                 }
             }
         }
-//        stage('Build Stage') {
-  //          steps {
-    //            sh 'mvn clean'
-    //            sh 'mvn compile'
-     //           sh 'mvn package'
-     //       }
-    //    }
+        stage('Build Stage') {
+            steps {
+                sh 'mvn clean'
+                sh 'mvn compile'
+                sh 'mvn package'
+            }
+        }
     //    stage('Initializing Docker') {       
       //      parallel {
         //        stage('Build Docker Images') {
