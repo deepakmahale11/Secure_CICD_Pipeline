@@ -90,9 +90,9 @@ pipeline {
                 stage('Dependency Check') {
                     steps {
                         sh 'rm owasp* || true'
-                        sh 'wget "https://github.com/RaziAbbas1/Devsecops/master/owasp-dependency-check.sh" '
-                        sh 'chmod +x owasp-dependency-check.sh'
-                        sh 'bash owasp-dependency-check.sh'
+                        sh 'wget https://github.com/RaziAbbas1/Devsecops/blob/master/dc.sh'
+                        sh 'chmod +x dc.sh'
+                        sh './dc.sh'
                         sh 'cat /var/lib/jenkins/OWASP-Dependency-Check/reports/dependency-check-report.xml'
                         archiveArtifacts artifacts: 'odc-reports/*.html', onlyIfSuccessful: true
                         archiveArtifacts artifacts: 'odc-reports/*.csv', onlyIfSuccessful: true
