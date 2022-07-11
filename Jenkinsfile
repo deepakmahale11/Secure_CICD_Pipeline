@@ -111,6 +111,8 @@ pipeline {
                }
             }
         }
+    }
+}
    //     stage('DAST') {
      //       steps {
 //                 sh 'docker rm dast_baseline || true'
