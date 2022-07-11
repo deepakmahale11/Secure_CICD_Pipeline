@@ -89,7 +89,7 @@ pipeline {
             parallel {
                 stage('Dependency Check') {
                     steps {
-                        sh 'wget "https://github.com/RaziAbbas1/Devsecops/blob/master/owasp-dependency.sh" '
+                        sh 'wget "https://github.com/RaziAbbas1/Devsecops/blob/master/owasp-dependency-check.sh" '
                         sh 'chmod +x owasp-dependency-check.sh'
                         sh 'bash owasp-dependency-check.sh'
                         archiveArtifacts artifacts: 'odc-reports/*.html', onlyIfSuccessful: true
