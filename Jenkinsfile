@@ -78,12 +78,12 @@ pipeline {
   //             }     
     //        }
   //      }
-    }
-}  
+  //  }
+//}  
    //   stage('SonarQube Analysis') {
       //      steps {
         //        sh 'mvn sonar:sonar -Dsonar.projectKey=mayur -Dsonar.host.url=http://192.168.96.135:4444 -Dsonar.login=8b23a5d0adfaffdf6030607be0309be62f521981 || true'
-     //       }
+     //      }
      //   }
             stage('SCA') {
             parallel {
