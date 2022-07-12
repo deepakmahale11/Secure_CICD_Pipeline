@@ -86,7 +86,7 @@ pipeline {
            stage('SonarQube Analysis') {
                steps {
                sh 'docker run -d -p 9000:9000 -p 9092:9092 owasp/sonarqube'
-               sh 'mvn sonar:sonar -Dsonar.projectKey=abbas -Dsonar.host.url=http://52.66.10.204:9000 -Dsonar.login=779f6ee013748a65c9850d1fc076e97b593b6f6f || true'
+               sh 'mvn sonar:sonar -Dsonar.projectKey=abbas -Dsonar.host.url=http://172.31.42.164:9000 -Dsonar.login=779f6ee013748a65c9850d1fc076e97b593b6f6f || true'
           }
       }
     }
