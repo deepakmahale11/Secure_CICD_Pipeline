@@ -80,11 +80,11 @@ pipeline {
   //      }
   //  }
 //}  
-   //   stage('SonarQube Analysis') {
-      //      steps {
-        //        sh 'mvn sonar:sonar -Dsonar.projectKey=mayur -Dsonar.host.url=http://192.168.96.135:4444 -Dsonar.login=8b23a5d0adfaffdf6030607be0309be62f521981 || true'
-     //      }
-     //   }
+          stage('SonarQube Analysis') {
+           steps {
+               sh 'mvn sonar:sonar -Dsonar.projectKey=abbas -Dsonar.host.url=http://52.66.10.204:9000 -Dsonar.login=779f6ee013748a65c9850d1fc076e97b593b6f6f || true'
+          }
+      }
             stage('Artifacts for Dependencies') {
             parallel {
                 stage('Dependency Check') {
