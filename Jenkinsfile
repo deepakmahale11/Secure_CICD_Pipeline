@@ -56,8 +56,41 @@ pipeline {
                 sh 'mvn clean'
                 sh 'mvn compile'
                 sh 'mvn package'
+            } 
+        }
+         stage('Artifacts for Dependencies') {
+            parallel {
+                stage('Dependency Check') {
+                    steps {
+                        sh 'wget https://github.com/RaziAbbas1/Devsecops/blob/master/dc.sh'
+                        sh 'chmod +x dc.sh'
+                        sh './dc.sh' 
+                        archiveArtifacts artifacts: 'odc-reports/*.html', onlyIfSuccessful: true
+                         archiveArtifacts artifacts: 'odc-reports/*.csv', onlyIfSuccessful: true
+                       // emailext attachLog: true, attachmentsPattern: '*.html', 
+                       // body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
+                       // subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
+                  }
+                }
+                stage('Junit Testing') {
+                    steps {
+                        sh 'echo "Junit Reports are created using archiveArtifacts"'
+                        archiveArtifacts artifacts: '*junit.xml', onlyIfSuccessful: true
+                        //emailext attachLog: true, attachmentsPattern: '*junit.xml', 
+                        //body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
+                       // subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
+                    }
+                }
             }
         }
+           stage('SonarQube Analysis') {
+               steps {
+               sh 'docker run -d -p 9000:9000 -p 9092:9092 owasp/sonarqube'
+               sh 'mvn sonar:sonar -Dsonar.projectKey=abbas -Dsonar.host.url=http://52.66.10.204:9000 -Dsonar.login=779f6ee013748a65c9850d1fc076e97b593b6f6f || true'
+          }
+      }
+    }
+}
     //    stage('Initializing Docker') {       
       //      parallel {
         //        stage('Build Docker Images') {
@@ -80,38 +113,8 @@ pipeline {
   //      }
   //  }
 //}  
-          stage('SonarQube Analysis') {
-           steps {
-               sh 'mvn sonar:sonar -Dsonar.projectKey=abbas -Dsonar.host.url=http://52.66.10.204:9000 -Dsonar.login=779f6ee013748a65c9850d1fc076e97b593b6f6f || true'
-          }
-      }
-            stage('Artifacts for Dependencies') {
-            parallel {
-                stage('Dependency Check') {
-                    steps {
-                        sh 'wget https://github.com/RaziAbbas1/Devsecops/blob/master/dc.sh'
-                        sh 'chmod +x dc.sh'
-                        sh './dc.sh' 
-                        archiveArtifacts artifacts: 'odc-reports/*.html', onlyIfSuccessful: true
-                         archiveArtifacts artifacts: 'odc-reports/*.csv', onlyIfSuccessful: true
-                       // emailext attachLog: true, attachmentsPattern: '*.html', 
-                       // body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                       // subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
-                  }
-                }
-                stage('Junit Testing') {
-                    steps {
-                        sh 'echo "Junit Reports are created using archiveArtifacts"'
-                        archiveArtifacts artifacts: '*junit.xml', onlyIfSuccessful: true
-                        //emailext attachLog: true, attachmentsPattern: '*junit.xml', 
-                        //body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                       // subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
-                    }
-               }
-            }
-        }
-    }
-}
+
+
    //     stage('DAST') {
      //       steps {
 //                 sh 'docker rm dast_baseline || true'
