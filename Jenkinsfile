@@ -85,7 +85,7 @@ pipeline {
         }
            stage('SonarQube Analysis') {
                steps {
-               sh 'mvn sonar:sonar -Dsonar.projectKey=abbas -Dsonar.host.url=http://65.0.3.73:9000 -Dsonar.login=b5cf403369f2a33c4267a025d6678d41eb0f32f4 || true'
+               sh 'mvn sonar:sonar -Dsonar.projectKey=abbas -Dsonar.host.url=http://65.0.3.73:9000 -Dsonar.login=a396f3c7af76f6ea35078becd3d18d17396942a5 || true'
           }
       }
     }
