@@ -101,7 +101,6 @@ pipeline {
                   }
               }
                 stage("Push Image To Docker HUB") { 
-                   step {
                        withCredentials([string(credentialsId: 'dockerhubpassword', variable: 'dockerhubpassword')]) {
                          // some block
                            sh 'docker login -u raziabbas1996 -p ${dockerhubpassword}'
@@ -114,8 +113,7 @@ pipeline {
                   
                        
                  stage('Deploying Containers') {
-                   steps {
-                         def dockerrun = 'docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'                       
+                       def dockerrun = 'docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'                       
                         sshagent(['dockerhostpassword']) {
                        // some block
                         sh 'ssh -o StringHostKeyChecking=no -l ec2-user@172.31.3.168 $(dockerrun)'
