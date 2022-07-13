@@ -110,10 +110,9 @@ pipeline {
                    }
                }    
             stage('Deploying Containers') {
-                steps {
-                 def dockerrun = 'docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'                                              
+                steps {                                              
                        sshagent(['dockerhostpassword']) {                     
-                           sh 'ssh -o StringHostKeyChecking=no ec2-user@172.31.3.168 ${dockerrun}'
+                           sh 'ssh -o StringHostKeyChecking=no ec2-user@172.31.3.168 docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'
                   }
                 }   
             }
