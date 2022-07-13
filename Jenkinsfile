@@ -24,8 +24,7 @@ pipeline {
                         sh 'trufflehog https://github.com/RaziAbbas1/Devsecops --json | jq "{branch:.branch, commitHash:.commitHash, path:.path, stringsFound:.stringsFound}" > trufflehog_report.json || true'
                         sh 'cat trufflehog_report.json'
                         sh 'echo "Scanning Repositories.....done"'
-                        archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true
-                        Telegrambot AttachLog: true, attachmentsPattern: 'trufflehog_report.json',
+                        archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true                      
                         //emailext attachLog: true, attachmentsPattern: 'trufflehog_report.json',
                         //body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-7", 
                         //subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "raziabbarizvi75@gmail.com"
