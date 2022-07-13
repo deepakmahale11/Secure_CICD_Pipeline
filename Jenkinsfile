@@ -88,8 +88,8 @@ pipeline {
         stage('Build Docker Images') {
                      steps {
                           sh 'docker build -t $JOB_NAME:v1.$BUILD_ID .'
-                         // sh 'docker image tag $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:v1.$BUILD_ID'
-                          sh 'docker image tag $JOB_NAME:V1.$BUILD_ID raziabbas1996/$JOB_NAME:latest'
+                          sh 'docker image tag $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:v1.$BUILD_ID'
+                          sh 'docker image tag $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:latest'
                   
               }
         }
