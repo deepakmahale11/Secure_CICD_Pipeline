@@ -78,14 +78,20 @@ pipeline {
                     steps {
                         sh 'echo "Junit Reports are created using archiveArtifacts"'
                         archiveArtifacts artifacts: '*junit.xml', onlyIfSuccessful: true
-                        emailext attachLog: true, attachmentsPattern: '*junit.xml', 
-                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
+                   //     emailext attachLog: true, attachmentsPattern: '*junit.xml', 
+                    //    body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
+                   //     subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
                     }
                 }
             }
         }
-        stage('Build Docker Images') {
+       //  stage('SonarQube Analysis') {
+       //     steps {
+       //         sh 'mvn sonar:sonar -Dsonar.projectKey=mayur -Dsonar.host.url=http://192.168.96.135:4444 -Dsonar.login=8b23a5d0adfaffdf6030607be0309be62f521981 || true'
+      //      }
+     //   }
+        
+               stage('Build Docker Images') {
                      steps {
                          sh 'docker build -t $JOB_NAME:v1.$BUILD_ID .'
                           sh 'docker image tag $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:v1.$BUILD_ID'
@@ -95,13 +101,22 @@ pipeline {
         }
        stage('Push Image To Docker Hub') { 
              steps {
-                              withCredentials([string(credentialsId: 'dockerhubpassword', variable: 'dockerhubpassword')]) {
+                           withCredentials([string(credentialsId: 'dockerhubpassword', variable: 'dockerhubpassword')]) {
                            sh 'docker login -u raziabbas1996 -p ${dockerhubpassword}'
-                       }
+               }
                            sh 'docker image push raziabbas1996/$JOB_NAME:v1.$BUILD_ID'
                            sh 'docker image push raziabbas1996/$JOB_NAME:latest'
                            sh 'docker rmi $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:latest'
                    }
-                 }    
-              }
-             }
+               }    
+            stage('Deploying Containers') {
+                steps {
+                       def dockerrun = 'docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'                       
+                       sshagent(['dockerhostpassword']) {                     
+                        sh "ssh -o StringHostKeyChecking=no ec2-user@172.31.3.168 $(dockerrun)"
+                  }
+                }   
+            }
+       }
+  }
+    
