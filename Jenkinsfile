@@ -100,7 +100,7 @@ pipeline {
                   
                   }
               }
-                stage("Push Image To Docker HUB") { 
+                stage('Push Image To Docker HUB') { 
                      //  withCredentials([string(credentialsId: 'dockerhubpassword', variable: 'dockerhubpassword')]) {
                          // some block
                            sh 'docker login -u raziabbas1996 -p ${dockerhubpassword}'
