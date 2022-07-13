@@ -94,13 +94,14 @@ pipeline {
               }
         }
        stage('Push Image To Docker Hub) { 
+             steps {
                               withCredentials([string(credentialsId: 'dockerhubpassword', variable: 'dockerhubpassword')]) {
-                              // some block
                            sh 'docker login -u raziabbas1996 -p ${dockerhubpassword}'
                        }
                            sh 'docker image push raziabbas1996/$JOB_NAME:v1.$BUILD_ID'
                            sh 'docker image push raziabbas1996/$JOB_NAME:latest'
                            sh 'docker rmi $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:latest'
-       }
-    }    
-}
+                   }
+                 }    
+              }
+             }
