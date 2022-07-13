@@ -119,7 +119,7 @@ pipeline {
                        
                         sshagent(['dockerhostpassword']) {
                        // some block
-                        sh "ssh -o StringHostKeyChecking=no -l ec2-user@172.31.3.168 $(dockerrun)"
+                        sh 'ssh -o StringHostKeyChecking=no -l ec2-user@172.31.3.168 $(dockerrun)'
 }
                    }
                  }
