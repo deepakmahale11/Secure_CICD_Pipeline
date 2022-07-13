@@ -10,9 +10,9 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh 'cd $WORKSPACE'
-                sh 'rm -rf CDAC-Project'
+                sh 'rm -rf project'
                 git branch: "master",
-                    url: "https://github.com/RaziAbbas1/Devsecops"
+                    url: "https://github.com/RaziAbbas1/Devsecops.git"
                 sh 'ls'
             }
         }
@@ -25,124 +25,76 @@ pipeline {
                         sh 'cat trufflehog_report.json'
                         sh 'echo "Scanning Repositories.....done"'
                         archiveArtifacts artifacts: 'trufflehog_report.json', onlyIfSuccessful: true
-                        //emailext attachLog: true, attachmentsPattern: 'trufflehog_*', 
-                       // body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-11", 
-                       // subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "raziabbasrizvi75@gmail.com"
+                        Telegrambot attachLog: true, attachmentsPattern: 'trufflehog_report.json',
+                        emailext attachLog: true, attachmentsPattern: 'trufflehog_report.json',
+                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Thankyou,\n CDAC-Project Group-7", 
+                        subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME} - success", mimeType: 'text/html', to: "raziabbarizvi75@gmail.com"
                     }
                 }
-            
                 stage('Image Security') {
-                   steps {
+                    steps {
                         sh 'cd $WORKSPACE'
                         sh 'dockle --input ~/docker_img_backup/mytomcat.tar -f json -o mytomcat_report.json'
                         sh 'cat mytomcat_report.json | jq {summary}'
-                        sh 'dockle --input ~/docker_img_backup/pgadmin4.tar -f json -o pgadmin4_report.json'
+                        sh 'dockle --input ~/docker_img_backup/pgadmin.tar -f json -o pgadmin4_report.json'
                         sh 'cat pgadmin4_report.json | jq {summary}'
-                        sh 'dockle --input ~/docker_img_backup/postgres11.tar -f json -o postgres11_report.json'
+                        sh 'dockle --input ~/docker_img_backup/postgres.tar -f json -o postgres11_report.json'
                         sh 'cat postgres11_report.json | jq {summary}'
                         sh 'dockle --input ~/docker_img_backup/zap2docker.tar -f json -o zap2docker-stable_report.json'
                         sh 'cat zap2docker-stable_report.json | jq {summary}'
                         sh 'dockle --input ~/docker_img_backup/sonarqube.tar -f json -o sonarqube_report.json'
                         sh 'cat sonarqube_report.json | jq {summary}'
-                     //   archiveArtifacts artifacts: '*.json', onlyIfSuccessful: true
-                       // emailext attachLog: true, attachmentsPattern: '*.json', 
-                       // body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                       // subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
+                        archiveArtifacts artifacts: '*.json', onlyIfSuccessful: true
+                        emailext attachLog: true, attachmentsPattern: '*.json', 
+                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
+                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
                     }
                 }
             }
         }
-        
         stage('Build Stage') {
             steps {
                 sh 'mvn clean'
                 sh 'mvn compile'
                 sh 'mvn package'
-            } 
+            }
         }
-          stage('Artifacts for Dependencies') {
-                 parallel {
+       
+        stage('SCA') {
+            parallel {
                 stage('Dependency Check') {
                     steps {
                         sh 'wget https://github.com/RaziAbbas1/Devsecops/blob/master/dc.sh'
                         sh 'chmod +x dc.sh'
-                        sh './dc.sh' 
+                        sh './dc.sh'
                         archiveArtifacts artifacts: 'odc-reports/*.html', onlyIfSuccessful: true
-                         archiveArtifacts artifacts: 'odc-reports/*.csv', onlyIfSuccessful: true
-                       // emailext attachLog: true, attachmentsPattern: '*.html', 
-                       // body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                       // subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
-                  }
+                        archiveArtifacts artifacts: 'odc-reports/*.csv', onlyIfSuccessful: true
+                        archiveArtifacts artifacts: 'odc-reports/*.json', onlyIfSuccessful: true
+                        Telegrambot attachLog: true, attachmentsPattern: 'trufflehog_report.json',
+                        emailext attachLog: true, attachmentsPattern: '*.html', 
+                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
+                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
+                    }
                 }
-                 stage('Junit Testing') {
+                stage('Junit Testing') {
                     steps {
                         sh 'echo "Junit Reports are created using archiveArtifacts"'
-                       archiveArtifacts artifacts: '*junit.xml', onlyIfSuccessful: true
-                        //emailext attachLog: true, attachmentsPattern: '*junit.xml', 
-                        //body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
-                       // subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
+                        archiveArtifacts artifacts: '*junit.xml', onlyIfSuccessful: true
+                        emailext attachLog: true, attachmentsPattern: '*junit.xml', 
+                        body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
+                        subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
                     }
-             }
-          }
-       }
-    //       stage('SonarQube Analysis') {
-     //          steps {
-     //          sh 'mvn sonar:sonar -Dsonar.projectKey=abbas -Dsonar.host.url=http://65.0.3.73:9000 -Dsonar.login=a396f3c7af76f6ea35078becd3d18d17396942a5 || true'
-   //       }
- //     }
-//}
-
-                 stage('Build Docker Images') {
+                }
+            }
+        }
+        stage('Build Docker Images') {
                      steps {
                           sh 'docker build -t $JOB_NAME:v1.$BUILD_ID .'
                           sh 'docker image tag $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:v1.$BUILD_ID'
                           sh 'docker image tag $JOB_NAME:V1.$BUILD_ID raziabbas1996/$JOB_NAME:latest'
                   
-                  }
               }
-                stage('Push Image To Docker HUB') { 
-                    steps {
-                       withCredentials([string(credentialsId: 'dockerhubpassword', variable: 'dockerhubpassword')]) {
-                           sh "docker login -u raziabbas1996 -p ${dockerhubpassword}"
-                       }
-                           sh 'docker image push raziabbas1996/$JOB_NAME:v1.$BUILD_ID'
-                           sh 'docker image push raziabbas1996/$JOB_NAME:latest'
-                           sh 'docker rmi $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:latest'
-                       
-                  }
-                }
-                  
-                       
-               //  stage('Deploying Containers') {
-                     //  def dockerrun = 'docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'                       
-                     //   sshagent(['dockerhostpassword']) {
-                       // some block
-                     //   sh 'ssh -o StringHostKeyChecking=no -l ec2-user@172.31.3.168 $(dockerrun)'
-               //   }
-     //              }
-    //             }
-   //            }
-    //          }
-
-             //           sh 'docker stop pgadmin_container'
-               //         sh 'docker stop postgres_container'
-                 //       sh 'docker stop login'
-                   //     sh 'docker start pgadmin_container'
-                     //   sh 'docker start postgres_container'
-                      //  sh 'docker start login'
-     //             }
-  //             }     
-    //        }
-  //      }
-  //  }
-//}  
-   //     stage('DAST') {
-     //       steps {
-//                 sh 'docker rm dast_baseline || true'
-          //      sh 'docker rm dast_full || true'
-            //    sh 'docker run --name dast_full --network project_project -t owasp/zap2docker-stable zap-full-scan.py -t http://192.168.96.135/LoginWebApp/ || true'
-              //  sh 'docker run --name dast_baseline --network project_project -t owasp/zap2docker-stable zap-baseline.py -t http://192.168.96.135/LoginWebApp/ --autooff || true'
-          //  }
-      //  }
-  //  }
-//}
+        }
+       
+    }
+}
