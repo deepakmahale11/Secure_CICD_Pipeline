@@ -101,7 +101,7 @@ pipeline {
                   }
               }
                 stage("Push Image To Docker HUB") { 
-                       withCredentials([string(credentialsId: 'dockerhubpassword', variable: 'dockerhubpassword')]) {
+                     //  withCredentials([string(credentialsId: 'dockerhubpassword', variable: 'dockerhubpassword')]) {
                          // some block
                            sh 'docker login -u raziabbas1996 -p ${dockerhubpassword}'
                            sh 'docker image push raziabbas1996/$JOB_NAME:v1.$BUILD_ID'
@@ -112,16 +112,16 @@ pipeline {
                 }
                   
                        
-                 stage('Deploying Containers') {
-                       def dockerrun = 'docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'                       
-                        sshagent(['dockerhostpassword']) {
+               //  stage('Deploying Containers') {
+                     //  def dockerrun = 'docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'                       
+                     //   sshagent(['dockerhostpassword']) {
                        // some block
-                        sh 'ssh -o StringHostKeyChecking=no -l ec2-user@172.31.3.168 $(dockerrun)'
-                  }
-                   }
-                 }
-               }
-              }
+                     //   sh 'ssh -o StringHostKeyChecking=no -l ec2-user@172.31.3.168 $(dockerrun)'
+               //   }
+     //              }
+    //             }
+   //            }
+    //          }
 
              //           sh 'docker stop pgadmin_container'
                //         sh 'docker stop postgres_container'
