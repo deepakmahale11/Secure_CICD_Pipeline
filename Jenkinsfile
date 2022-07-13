@@ -72,8 +72,8 @@ pipeline {
                        // emailext attachLog: true, attachmentsPattern: '*.html', 
                        // body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
                        // subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
-                  }
-                }
+              //    }
+            //    }
               //  stage('Junit Testing') {
               //      steps {
                //         sh 'echo "Junit Reports are created using archiveArtifacts"'
@@ -119,7 +119,7 @@ pipeline {
                        
                         sshagent(['dockerhostpassword']) {
                        // some block
-                        sh 'ssh -o StringHostKeyChecking=no -l ec2-user@172.31.3.168 $(dockerrun)'
+                        sh "ssh -o StringHostKeyChecking=no -l ec2-user@172.31.3.168 $(dockerrun)"
 }
                    }
                  }
