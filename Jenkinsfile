@@ -113,7 +113,7 @@ pipeline {
                   steps {  
                         script {
                            def dockerrun='sudo docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'
-                           sshagent(['dockerhostpassword']) {                     
+                           sshagent(['docker_Server']) {                     
                            sh "ssh -o StringHostKeyChecking=no ec2-user@172.31.3.168 ${dockerrun}"
                        }     
                   }
