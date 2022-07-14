@@ -93,7 +93,7 @@ pipeline {
         
                stage('Build Docker Images') {
                      steps {
-                         sh 'docker build -t $JOB_NAME:v1.$BUILD_ID .'
+                          sh 'docker build -t $JOB_NAME:v1.$BUILD_ID .'
                           sh 'docker image tag $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:v1.$BUILD_ID'
                           sh 'docker image tag $JOB_NAME:v1.$BUILD_ID raziabbas1996/$JOB_NAME:latest'
                   
@@ -110,10 +110,11 @@ pipeline {
                    }
                }    
             stage('Deploying Containers') {
-                steps {                                              
+                steps {  
+                    def dockerrun = ' sudo docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'
                        sshagent(['dockerhostpassword']) {                     
-                           sh 'ssh -o StringHostKeyChecking=no ec2-user@172.31.3.168'
-                           sh 'docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'
+                           sh "ssh -o StringHostKeyChecking=no ec2-user@172.31.3.168 ${dockerrun}"
+                           
                   }
                 }   
             }
