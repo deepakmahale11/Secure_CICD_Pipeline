@@ -113,7 +113,11 @@ pipeline {
                   steps {  
                         script {
                            def dockerrun = 'docker run -p 8080:8080 -d --name Devsecops raziabbas1996/$JOB_NAME:latest'
+                           def dockerrm = 'docker container rm -f Devsecops'
+                           def dockerimg = 'docker images rmi raziabbas1996/$JOB_NAME'
                            sshagent(['docker_Server']) {                     
+                           sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.3.168 ${dockerrm}"
+                           sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.3.168 ${dockerimg}"
                            sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.3.168 ${dockerrun}"
                        }     
                   }
