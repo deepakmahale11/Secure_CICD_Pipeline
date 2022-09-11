@@ -17,7 +17,7 @@ fi
 
 # Make sure we are using the latest version
 docker pull owasp/dependency-check:$DC_VERSION
-chmod 777 /var/lib/jenkins/workspace/jenkin/odc-reports
+
 docker run --rm \
     -e user=$USER \
     -u $(id -u ${USER}):$(id -g ${USER}) \
@@ -31,3 +31,4 @@ docker run --rm \
     --out /report
     # Use suppression like this: (where /src == $pwd)
     # --suppression "/src/security/dependency-check-suppression.xml"
+    chmod 777 /var/lib/jenkins/workspace/jenkin/odc-reports
