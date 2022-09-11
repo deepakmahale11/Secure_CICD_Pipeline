@@ -25,10 +25,10 @@ docker run --rm \
     --volume "$DATA_DIRECTORY":/usr/share/dependency-check/data:z \
     --volume $(pwd)/odc-reports:/report:z \
     owasp/dependency-check:$DC_VERSION \
+    --volume $(chmod) 777 /var/lib/jenkins/workspace/jenkin/odc-reports
     --scan /src \
     --format "ALL" \
     --project "$DC_PROJECT" \
     --out /report
     # Use suppression like this: (where /src == $pwd)
     # --suppression "/src/security/dependency-check-suppression.xml"
-    chmod 777 /var/lib/jenkins/workspace/jenkin/odc-reports
