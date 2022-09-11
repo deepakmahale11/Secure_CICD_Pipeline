@@ -127,5 +127,13 @@ pipeline {
                   }
                 }   
             }
-       }
+             stage('DAST') {
+             steps {
+                sh 'docker rm dast_baseline || true'
+                sh 'docker rm dast_full || true'
+                sh 'docker run --name dast_full --network project_project -t owasp/zap2docker-stable zap-full-scan.py -t http://13.234.213.199/LoginWebApp/ || true'
+                sh 'docker run --name dast_baseline --network project_project -t owasp/zap2docker-stable zap-baseline.py -t http://13.234.213.199/LoginWebApp/ --autooff || true'
+             }
+        }
+    }
 }
