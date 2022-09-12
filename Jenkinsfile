@@ -90,7 +90,7 @@ pipeline {
                   sh 'docker container stop sonarqube || true'
                   sh 'docker container rm -f sonarqube || true'
                   sh 'docker run -p 9000:9000 -d --name sonarqube owasp/sonarqube'
-                  sh 'mvn sonar:sonar Dsonar.projectKey=ditiss -Dsonar.host.url=http://13.234.213.199:9000 -Dsonar.login=74bfeb74c584c516db19f15c85cd3b30fae78200'
+                  sh 'mvn sonar:sonar Dsonar.projectKey=ditiss -Dsonar.host.url=http://13.234.213.199:9000 -Dsonar.login=61a1cc54c00bd9744c48fd4c9d2cffb96a2ef818'
                                               
            }
        }
