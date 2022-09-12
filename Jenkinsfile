@@ -87,9 +87,9 @@ pipeline {
         }
            stage('SonarQube Analysis') {
              steps {
-                  sh 'docker container stop sonarqube || true'
-                  sh 'docker container rm -f sonarqube || true'
-                  sh 'docker run -p 9000:9000 -d --name sonarqube owasp/sonarqube'
+                 // sh 'docker container stop sonarqube || true'
+              //    sh 'docker container rm -f sonarqube || true'
+             //     sh 'docker run -p 9000:9000 -d --name sonarqube owasp/sonarqube'
                  // sh 'mvn sonar:sonar Dsonar.projectKey=sonarqube -Dsonar.host.url=http://13.232.105.153:9000 -Dsonar.login=d4907e3f4ad51664567e9343b43c1b71a4a2ebf8'
                  withSonarQubeEnv('sonarqube') {
                      sh 'mvn sonar:sonar'
