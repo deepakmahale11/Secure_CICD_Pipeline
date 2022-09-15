@@ -78,6 +78,13 @@ pipeline {
                 }
             }
         }
+              stage('Build Stage') {
+                 steps {
+                   sh 'mvn clean'
+                   sh 'mvn compile'
+                   sh 'mvn package'
+            }
+         }
            stage('SonarQube Analysis') {
              steps {
                //  sh 'docker container stop sonarqube || true'
@@ -89,14 +96,7 @@ pipeline {
            }
          }
        }
-         stage('Build Stage') {
-            steps {
-                sh 'mvn clean'
-                sh 'mvn compile'
-                sh 'mvn package'
-            }
-         }
-        
+         
                stage('Build Docker Images') {
                      steps {
                           sh 'docker build -t $JOB_NAME:v1.$BUILD_ID .'
