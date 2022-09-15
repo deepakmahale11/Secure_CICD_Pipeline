@@ -60,8 +60,8 @@ pipeline {
                         sh 'chmod +x dc.sh'
                         sh './dc.sh'
                         archiveArtifacts artifacts: 'odc-reports/*.html', onlyIfSuccessful: true
-                        archiveArtifacts artifacts: 'odc-reports/*.csv', onlyIfSuccessful: true
-                        archiveArtifacts artifacts: 'odc-reports/*.json', onlyIfSuccessful: true
+                   //     archiveArtifacts artifacts: 'odc-reports/*.csv', onlyIfSuccessful: true
+                     //   archiveArtifacts artifacts: 'odc-reports/*.json', onlyIfSuccessful: true
      //                   emailext attachLog: true, attachmentsPattern: '*.html', 
      //                   body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}\n Please Find Attachments for the following:\n Thankyou\n CDAC-Project Group-7",
      //                   subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - success", mimeType: 'text/html', to: "abbyvishnoi@gmail.com"
