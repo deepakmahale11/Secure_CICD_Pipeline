@@ -51,13 +51,6 @@ pipeline {
                 }
             }
         }
-        stage('Build Stage') {
-            steps {
-                sh 'mvn clean'
-                sh 'mvn compile'
-                sh 'mvn package'
-            }
-        }
        
         stage('SCA') {
             parallel {
@@ -96,6 +89,13 @@ pipeline {
            }
          }
        }
+         stage('Build Stage') {
+            steps {
+                sh 'mvn clean'
+                sh 'mvn compile'
+                sh 'mvn package'
+            }
+         }
         
                stage('Build Docker Images') {
                      steps {
