@@ -51,7 +51,13 @@ pipeline {
                 }
             }
         }
-       
+                stage('Build Stage') {
+                     steps {
+                      sh 'mvn clean'
+                      sh 'mvn compile'
+                      sh 'mvn package'
+            }
+         }
         stage('SCA') {
             parallel {
                 stage('Dependency Check') {
@@ -78,13 +84,7 @@ pipeline {
                 }
             }
         }
-              stage('Build Stage') {
-                 steps {
-                   sh 'mvn clean'
-                   sh 'mvn compile'
-                   sh 'mvn package'
-            }
-         }
+            
            stage('SonarQube Analysis') {
              steps {
                //  sh 'docker container stop sonarqube || true'
